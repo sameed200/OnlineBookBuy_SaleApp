@@ -120,3 +120,39 @@ public:
     }
 };
 
+class OrderHistory {
+private:
+    static const int MAX_ORDERED_BOOKS = 100;
+    Book* orderedBooks[MAX_ORDERED_BOOKS];
+    int numOrderedBooks;
+
+public:
+
+    OrderHistory() : numOrderedBooks(0) {}
+
+
+    ~OrderHistory() {
+        for (int i = 0; i < numOrderedBooks; ++i) {
+            delete orderedBooks[i];
+        }
+    }
+
+
+    void addToOrderHistory(const Book& book) {
+        if (numOrderedBooks < MAX_ORDERED_BOOKS) {
+            orderedBooks[numOrderedBooks] = new Book(book);
+            ++numOrderedBooks;
+        } else {
+            cerr << "Cannot add more books to order history. Maximum capacity reached." << endl;
+        }
+    }
+
+
+    void displayOrderHistory() const {
+        cout << "Order History:" << endl;
+        for (int i = 0; i < numOrderedBooks; ++i) {
+            orderedBooks[i]->displayDetails();
+            cout << endl;
+        }
+    }
+};
