@@ -18,3 +18,39 @@ public:
     string getUsername() const { return username; }
     string getPassword() const { return password; }
 };
+
+class Book {
+private:
+    string title;
+    string author;
+    string category;
+    string isbn;
+    int yearPublished;
+    double price;
+
+public:
+    // Constructor
+    Book(string title, string author, string category, string isbn, int yearPublished, double price) 
+        : title(title), author(author), category(category), isbn(isbn), yearPublished(yearPublished), price(price) {}
+
+    // Destructor
+    ~Book() {}
+
+    // Getters
+    string getTitle() const { return title; }
+    string getAuthor() const { return author; }
+    string getCategory() const { return category; }
+    string getISBN() const { return isbn; }
+    int getYearPublished() const { return yearPublished; }
+    double getPrice() const { return price; }
+
+    // Method to display book details
+    void displayDetails() const {
+        cout << "Title: " << title << endl;
+        cout << "Author: " << author << endl;
+        cout << "Category: " << category << endl;
+        cout << "ISBN: " << isbn << endl;
+        cout << "Year Published: " << yearPublished << endl;
+        cout << "Price: $" << price << endl;
+    }
+};
