@@ -1,3 +1,20 @@
 #include <iostream>
 #include <string>
 using namespace std;
+
+class User {
+private:
+    string username;
+    string password;
+
+public:
+    // Constructor
+    User(string username, string password) : username(username), password(password) {}
+
+    // Destructor
+    ~User() {}
+
+    // Getters
+    string getUsername() const { return username; }
+    string getPassword() const { return password; }
+};
