@@ -120,3 +120,203 @@ public:
     }
 };
 
+class OrderHistory {
+private:
+    static const int MAX_ORDERED_BOOKS = 100;
+    Book* orderedBooks[MAX_ORDERED_BOOKS];
+    int numOrderedBooks;
+
+public:
+
+    OrderHistory() : numOrderedBooks(0) {}
+
+
+    ~OrderHistory() {
+        for (int i = 0; i < numOrderedBooks; ++i) {
+            delete orderedBooks[i];
+        }
+    }
+
+
+    void addToOrderHistory(const Book& book) {
+        if (numOrderedBooks < MAX_ORDERED_BOOKS) {
+            orderedBooks[numOrderedBooks] = new Book(book);
+            ++numOrderedBooks;
+        } else {
+            cerr << "Cannot add more books to order history. Maximum capacity reached." << endl;
+        }
+    }
+
+
+    void displayOrderHistory() const {
+        cout << "Order History:" << endl;
+        for (int i = 0; i < numOrderedBooks; ++i) {
+            orderedBooks[i]->displayDetails();
+            cout << endl;
+        }
+    }
+};
+
+class ShoppingCart {
+private:
+    static const int MAX_ITEMS = 100;
+    Book* items[MAX_ITEMS];
+    int numItems;
+
+public:
+
+    ShoppingCart() : numItems(0) {}
+
+
+    ~ShoppingCart() {
+        for (int i = 0; i < numItems; ++i) {
+            delete items[i];
+        }
+    }
+
+
+    void addToCart(Book* book) {
+        if (numItems < MAX_ITEMS) {
+            items[numItems] = new Book(*book);
+            ++numItems;
+        } else {
+            cerr << "Cannot add more items to the cart. Maximum capacity reached." << endl;
+        }
+    }
+
+
+    void displayCart() const {
+        cout << "Items in the shopping cart:" << endl;
+        for (int i = 0; i < numItems; ++i) {
+            items[i]->displayDetails();
+            cout << endl;
+        }
+    }
+
+
+    int getNumItems() const {
+        return numItems;
+    }
+
+
+    Book* getItem(int index) const {
+        if (index >= 0 && index < numItems) {
+            return items[index];
+        }
+        return nullptr;
+    }
+};
+
+class CheckoutProcess {
+public:
+
+    static void checkout(const ShoppingCart& cart) {
+        double totalAmount = 0.0;
+        cout << "Checking out..." << endl;
+        for (int i = 0; i < cart.getNumItems(); ++i) {
+            totalAmount += cart.getItem(i)->getPrice();
+        }
+        cout << "Total amount to pay: $" << totalAmount << endl;
+    
+    }
+};
+
+class AdminDashboard {
+public:
+
+    static void manageBooks(BookManager& manager) {
+    
+        cout << "Admin dashboard for book management." << endl;
+    }
+};
+
+int main() {
+
+    string username, password;
+    cout << "Enter username: ";
+    cin >> username;
+    cout << "Enter password: ";
+    cin >> password;
+    User user(username, password);
+
+    BookManager manager;
+
+    char addBookChoice;
+    do {
+        std::string title, author, category, isbn;
+        int yearPublished;
+        double price;
+
+        cout << "Enter book title: ";
+        cin.ignore();
+        getline(cin, title);
+
+        cout << "Enter book author: ";
+        getline(cin, author);
+
+        cout << "Enter book category: ";
+        getline(cin, category);
+
+        cout << "Enter book ISBN: ";
+        cin >> isbn;
+
+        cout << "Enter year of publication: ";
+        cin >> yearPublished;
+
+        cout << "Enter book price: $";
+        cin >> price;
+
+        manager.addBook(Book(title, author, category, isbn, yearPublished, price));
+
+        cout << "Do you want to add another book? (y/n): ";
+        cin >> addBookChoice;
+    } while (addBookChoice == 'y' || addBookChoice == 'Y');
+
+    manager.listAllBooks();
+
+    ShoppingCart cart;
+    string addToCartChoice;
+    do {
+        string bookISBN;
+        cout << "Enter ISBN of the book you want to add to cart: ";
+        cin >> bookISBN;
+        Book* bookToAdd = manager.getBookByISBN(bookISBN);
+        if (bookToAdd != nullptr) {
+            cart.addToCart(bookToAdd);
+            cout << "Book added to cart." << endl;
+        } else {
+            cout << "Book not found. Please enter a valid ISBN." << endl;
+        }
+        cout << "Do you want to add another book to cart? (y/n): ";
+        cin >> addToCartChoice;
+    } while (addToCartChoice == "y" || addToCartChoice == "Y");
+
+    cart.displayCart();
+
+    CheckoutProcess::checkout(cart);
+
+    OrderHistory orderHistory;
+
+    string bookISBN;
+    int userRating;
+    string userReview;
+
+    cout << "Enter ISBN of the book you want to rate and review: ";
+    cin >> bookISBN;
+    cout << "Enter your rating (1-5): ";
+    cin >> userRating;
+    cout << "Enter your review: ";
+    cin.ignore();
+    getline(cin, userReview);
+
+    RatingAndReview userReviewObj(user.getUsername(), manager.getBookByISBN(bookISBN)->getTitle(), userRating, userReview);
+
+    string notificationMessage = "Thank you for your review on " + userReviewObj.getBookTitle();
+    NotificationSystem::sendNotificationToUser(user.getUsername(), notificationMessage);
+
+    orderHistory.addToOrderHistory(*(manager.getBookByISBN(bookISBN)));
+
+    orderHistory.displayOrderHistory();
+
+    return 0;
+}
