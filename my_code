@@ -111,3 +111,12 @@ public:
     int getRating() const { return rating; }
     string getReview() const { return review; }
 };
+
+class NotificationSystem {
+public:
+
+    static void sendNotificationToUser(const string& username, const string& message) {
+        cout << "Notification for " << username << ": " << message << endl;
+    }
+};
+
