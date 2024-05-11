@@ -90,3 +90,24 @@ public:
     }
 };
 
+class RatingAndReview {
+private:
+    string username;
+    string bookTitle;
+    int rating;
+    string review;
+
+public:
+
+    RatingAndReview(string username, string bookTitle, int rating, string review)
+        : username(username), bookTitle(bookTitle), rating(rating), review(review) {}
+
+
+    ~RatingAndReview() {}
+
+
+    string getUsername() const { return username; }
+    string getBookTitle() const { return bookTitle; }
+    int getRating() const { return rating; }
+    string getReview() const { return review; }
+};
